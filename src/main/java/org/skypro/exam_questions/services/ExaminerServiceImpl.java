@@ -1,0 +1,43 @@
+package org.skypro.exam_questions.services;
+
+import org.skypro.exam_questions.entities.Question;
+import org.skypro.exam_questions.interfaces.ExaminerService;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+@Service
+public class ExaminerServiceImpl implements ExaminerService {
+    private final JavaQuestionService javaQuestionService;
+    private Collection<Question> questions;
+
+    public ExaminerServiceImpl(JavaQuestionService javaQuestionService) {
+        this.javaQuestionService = javaQuestionService;
+        questions = new ArrayList<>();
+        fillTheCollection();
+    }
+
+    @Override
+    public Collection<Question> getQuestions(int amount) {
+        if (javaQuestionService.getAllQuestions().size() >= amount) {
+            Collection<Question> allQuestions = javaQuestionService.getAllQuestions();
+            questions = allQuestions.stream()
+                    .sorted((q1, q2) -> javaQuestionService.getRandomQuestion()).toList();
+            return questions.stream().limit(amount).collect(Collectors.toCollection(ArrayList::new));
+        } else throw new RuntimeException("BAD_REQUEST");
+    }
+
+
+    public void fillTheCollection() {
+        Question question1 = new Question("What color is the apple?", "Green");
+        Question question2 = new Question("Where does the bear live?", "In the forest");
+        Question question3 = new Question("How many colors does a traffic light have?", "Three");
+        Question question4 = new Question("How many wheels does a car have?", "4");
+        javaQuestionService.addQuestion(question1);
+        javaQuestionService.addQuestion(question2);
+        javaQuestionService.addQuestion(question3);
+        javaQuestionService.addQuestion(question4);
+    }
+}
