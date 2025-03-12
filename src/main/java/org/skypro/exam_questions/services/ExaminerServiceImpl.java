@@ -4,8 +4,7 @@ import org.skypro.exam_questions.entities.Question;
 import org.skypro.exam_questions.interfaces.ExaminerService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,12 +20,16 @@ public class ExaminerServiceImpl implements ExaminerService {
 
     @Override
     public Collection<Question> getQuestions(int amount) {
-        if (javaQuestionService.getAllQuestions().size() >= amount) {
-            Collection<Question> allQuestions = javaQuestionService.getAllQuestions();
-            questions = allQuestions.stream()
-                    .sorted((q1, q2) -> javaQuestionService.getRandomQuestion()).toList();
-            return questions.stream().limit(amount).collect(Collectors.toCollection(ArrayList::new));
-        } else throw new RuntimeException("BAD_REQUEST");
+        Set<Question> result = new HashSet<>();
+        Collection<Question> allQuestions = javaQuestionService.getAllQuestions();
+        if (allQuestions.size() >= amount) {
+            while (result.size() < amount) {
+                result.add(javaQuestionService.getRandomQuestion());
+            }
+            return new ArrayList<>(result);
+        } else {
+            throw new RuntimeException("BAD_REQUEST");
+        }
     }
 
 

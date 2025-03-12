@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class JavaQuestionService implements QuestionService {
@@ -55,14 +56,19 @@ public class JavaQuestionService implements QuestionService {
     }
 
     @Override
-    public int getRandomQuestion() {
+    public Question getRandomQuestion() {
         Random random = new Random();
-        return random.nextInt();
+        ArrayList<Question> collect = getAllQuestions().stream().collect(Collectors.toCollection(ArrayList::new));
+        if(questions == null || questions.isEmpty()) {
+            return null;
+        }
+        int index = random.nextInt(questions.size());
+        return collect.get(index);
     }
 
     @Override
     public Question findQuestion(String question) {
-        ArrayList<Question> questionList = questions.stream().map(q -> q).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Question> questionList = questions.stream().collect(Collectors.toCollection(ArrayList::new));
         System.out.println("questionList = " + questionList);
         return questionList.stream().filter(questionObj -> questionObj.getQuestion().equals(question)).findAny().orElseThrow();
     }
