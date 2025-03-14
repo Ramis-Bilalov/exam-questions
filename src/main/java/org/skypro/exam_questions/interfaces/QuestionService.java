@@ -10,7 +10,7 @@ public interface QuestionService {
     Question removeQuestion(Question question);
     Question removeQuestion(String question, String answer);
     Collection<Question> getAllQuestions();
-    int getRandomQuestion();
+    Question getRandomQuestion();
     Question findQuestion(String question);
 
 }

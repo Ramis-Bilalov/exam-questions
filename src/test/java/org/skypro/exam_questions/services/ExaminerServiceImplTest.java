@@ -43,21 +43,17 @@ public class ExaminerServiceImplTest {
 
     @Test
     public void givenAmountOfQuestions_whenGetQuestions_thenReturnQuestions() {
-        int amount = 2;
+        int amount = 3;
 
         Question question1 = new Question("What color is the apple?", "Green");
         Question question2 = new Question("Where does the bear live?", "In the forest");
 
         Mockito.when(javaQuestionService.getAllQuestions()).thenReturn(questions);
 
-        Mockito.when(javaQuestionService.getRandomQuestion()).thenReturn(1);
-
-        Collection<Question> collection = new ArrayList<>();
-        collection.add(question1);
-        collection.add(question2);
+        Mockito.when(javaQuestionService.getRandomQuestion()).thenReturn(question2);
 
         Assertions.assertEquals("[question='What color is the apple?', answer='Green', " +
                 "question='Where does the bear live?', answer='In the forest']",
-                examinerService.getQuestions(amount).toString());
+                examinerService.getQuestions(amount));
     }
 }
